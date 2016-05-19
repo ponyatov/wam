@@ -17,9 +17,9 @@ struct CELL {				// [hak,p.10] heap cell and HEAP array
 int CELL::alloc = 0;
 
 int CELL::allocate(string &tag) {
-	assert(alloc<HEAPsz);			// check free heap
-	HEAP[alloc].tag=&tag;			// set tag marker
-	HEAP[alloc].ref=alloc;			// point unbounded var to itself
+	assert(alloc < HEAPsz);			// check free heap
+	HEAP[alloc].tag = &tag;			// set tag marker
+	HEAP[alloc].ref = alloc;		// point unbounded var to itself
 	return alloc++;
 }
 
@@ -37,7 +37,7 @@ struct REF: WAM {
 	static string tag;
 };
 string REF::tag("REF");
-REF::REF() : WAM() { HEAP[hptr].tag = &tag; }
+REF::REF():WAM() { HEAP[hptr].tag = &tag; }
 
 void dump_heap() {
 	for (int i = 0; i < CELL::alloc; i++)

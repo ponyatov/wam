@@ -8,10 +8,19 @@
 using namespace std;
 
 struct CELL {				// [hak,p.10] heap cell and HEAP array
-	string* tag;
-	int ref;
+	string* tag;			// type tag
+	int ref;				// reference to other heap cell see [hak,L0]
+	// some hints using C++
+	static int alloc;
+	static int allocate(string&);
 } HEAP[HEAPsz];
-int HEAP_ALLOC = 0;
+int CELL::alloc = 0;
+int CELL::allocate(string &tag) {
+	assert(alloc<HEAPsz);
+	HEAP[alloc].tag=&tag;
+	HEAP[alloc].ref=alloc;
+	return alloc++;
+}
 
 struct WAM {				// basic class for heap cell
 	WAM();
@@ -20,11 +29,7 @@ struct WAM {				// basic class for heap cell
 };
 string WAM::tag("(undef)");
 
-WAM::WAM() {
-	hptr = HEAP_ALLOC++; assert(HEAP_ALLOC < HEAPsz);	// alloc cell
-	HEAP[hptr].tag = &tag;								// mark tag
-	HEAP[hptr].ref = hptr;								// point to self
-}
+WAM::WAM() { hptr = CELL::allocate(tag); }
 
 struct REF: WAM {
 	REF();
@@ -34,7 +39,7 @@ string REF::tag("REF");
 REF::REF() : WAM() { HEAP[hptr].tag = &tag; }
 
 void dump_heap() {
-	for (int i = 0; i < HEAP_ALLOC; i++)
+	for (int i = 0; i < CELL::alloc; i++)
 		printf("%.4X:\t%s\t%i\n", i, HEAP[i].tag->c_str(), HEAP[i].ref);
 }
 

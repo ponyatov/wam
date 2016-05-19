@@ -15,10 +15,11 @@ struct CELL {				// [hak,p.10] heap cell and HEAP array
 	static int allocate(string&);	// allocation encapsulated
 } HEAP[HEAPsz];
 int CELL::alloc = 0;
+
 int CELL::allocate(string &tag) {
-	assert(alloc<HEAPsz);
-	HEAP[alloc].tag=&tag;
-	HEAP[alloc].ref=alloc;
+	assert(alloc<HEAPsz);			// check free heap
+	HEAP[alloc].tag=&tag;			// set tag marker
+	HEAP[alloc].ref=alloc;			// point unbounded var to itself
 	return alloc++;
 }
 

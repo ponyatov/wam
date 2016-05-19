@@ -10,9 +10,9 @@ using namespace std;
 struct CELL {				// [hak,p.10] heap cell and HEAP array
 	string* tag;			// type tag
 	int ref;				// reference to other heap cell see [hak,L0]
-	// some hints using C++
-	static int alloc;
-	static int allocate(string&);
+
+	static int alloc;				// some hints using C++:
+	static int allocate(string&);	// allocation encapsulated
 } HEAP[HEAPsz];
 int CELL::alloc = 0;
 int CELL::allocate(string &tag) {

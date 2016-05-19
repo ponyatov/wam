@@ -1,7 +1,7 @@
 wam.log: ./wam.exe
 	./wam.exe > $@ && tail $(TAIL) $@
-C = wam.c
+C = wam.cpp
 H = 
-CFLAGS += -DHEAPsz=0x10
+CXXFLAGS += -std=gnu++11 -DHEAPsz=0x10
 ./wam.exe: $(C) $(H) Makefile
-	$(CC) $(CFLAGS) -o $@ $(C)
+	$(CXX) $(CXXFLAGS) -o $@ $(C)

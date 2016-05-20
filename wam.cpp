@@ -2,63 +2,104 @@
 // based on [hak] Hassan Aït-Kaci
 // Warren's Abstract Machine: A Tutorial Reconstruction
 
+// ============ headers ===========
+
 #include <iostream>
+#include <sstream>
 #include <cstdio>
 #include <cassert>
+#include <vector>
+#include <map>
 using namespace std;
 
-struct CELL {				// [hak,p.10] heap cell and HEAP array
-	string* tag;			// type tag
-	int ref;				// reference to other heap cell see [hak,L0]
+// ============== HEAP ============
 
-	static int alloc;				// some hints using C++:
-	static int allocate(string&);	// allocation encapsulated
-} HEAP[HEAPsz];
-int CELL::alloc = 0;
+struct CELL;				// \ HEAP uses C++ vector storage in system memory
+vector<CELL*> HEAP;			// /
 
-int CELL::allocate(string &tag) {
-	assert(alloc < HEAPsz);			// check free heap
-	HEAP[alloc].tag = &tag;			// set tag marker
-	HEAP[alloc].ref = alloc;		// point unbounded var to itself
-	return alloc++;
+// ========== WAM heap cell =======
+
+struct CELL {				// [hak,p.10] heap cell
+	CELL();
+	string tag;				// cell type tag
+	CELL* ref;				// pointer to other cell (or itself) see [hak,L0]
+	virtual string dump();	// represent as string (must have 1+ virtual fn)
+};
+
+CELL::CELL() {
+	ref = this;						// point to itself
+	tag = "(cell)";					// static tag not works (?)
+	HEAP.push_back(this);			// save to HEAP
+	assert(HEAP.size() < HEAPsz);	// limit total HEAP size
 }
 
-struct WAM {				// basic class for heap cell
-	WAM();
-	static string tag;		// type tag
-	int hptr;				// pointer to cell in HEAP
-};
-string WAM::tag = "(undef)";
+string CELL::dump() {		// dump cell as string
+	ostringstream os;
+	os << this << ":\t" << tag << '\t' << ref << endl;
+	return os.str();
+}
 
-WAM::WAM() { hptr = CELL::allocate(tag); }
+// ============== REF =============
 
-struct REF: WAM {
+struct REF: CELL {			// [hak,p.10] <REF,k> k = system heap addr
 	REF();
-	static string tag;
 };
-string REF::tag = "REF";
-REF::REF():WAM() { HEAP[hptr].tag = &tag; }
+
+REF::REF() : CELL() {
+	tag = "REF";
+}
+
+// ============== STR ==============
+
+struct STR: CELL {			// [hak,p.10]
+	STR(CELL*);
+};
+
+STR::STR(CELL*FNC) : CELL() {
+	tag = "STR"; ref = FNC;
+}
+
+// ============== term/n ===========
+
+struct TERM : CELL {
+	CELL* str;
+	TERM(string);
+	int arity=0;
+	vector<CELL*> nest; void push(CELL*);	// nested terms
+	string dump();
+};
+
+TERM::TERM(string Name) : CELL() {
+	str = new STR(this);
+	tag = Name;
+}
+
+void TERM::push(CELL* X) { nest.push_back(X); arity++; }
+
+string TERM::dump() {
+	ostringstream os;
+	os << this << ":\t" << tag << "/" << arity << endl;
+	for (auto it = nest.begin(), e = nest.end(); it != e; it++)
+		os << (*it)->dump();
+	return os.str();
+}
+
+// ================== heap dump ==============
 
 void dump_heap() {
-	for (int i = 0; i < CELL::alloc; i++)
-		printf("%.4X:\t%s\t%i\n", i, HEAP[i].tag->c_str(), HEAP[i].ref);
+	for (auto item = HEAP.begin(), last = HEAP.end(); item != last; item++)
+		cout << (*item)->dump() << endl;
 }
 
-struct STR: WAM {			// [hak,p.10] term representation
-	STR();
-	static string tag,term;
-	int fptr;				// functor cell pointer
-};
-string STR::tag = "STR";
-string STR::term = "FNC";
-STR::STR() : WAM() { HEAP[hptr].tag = &tag;
-	fptr = CELL::allocate(term); HEAP[hptr].ref = fptr; HEAP[fptr].ref = fptr;
-}
+// ============== static defined items ===========
 
 REF X,Y;
-STR A,B;
+TERM B("bb"),C("cCc");
+
+// ===================== main() ============
 
 int main() {
+	B.push(new REF()); B.push(new STR(&C));
 	dump_heap();
 	return 0;
 }

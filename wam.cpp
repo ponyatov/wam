@@ -28,7 +28,7 @@ struct WAM {				// basic class for heap cell
 	static string tag;		// type tag
 	int hptr;				// pointer to cell in HEAP
 };
-string WAM::tag("(undef)");
+string WAM::tag = "(undef)";
 
 WAM::WAM() { hptr = CELL::allocate(tag); }
 
@@ -36,7 +36,7 @@ struct REF: WAM {
 	REF();
 	static string tag;
 };
-string REF::tag("REF");
+string REF::tag = "REF";
 REF::REF():WAM() { HEAP[hptr].tag = &tag; }
 
 void dump_heap() {
@@ -44,7 +44,19 @@ void dump_heap() {
 		printf("%.4X:\t%s\t%i\n", i, HEAP[i].tag->c_str(), HEAP[i].ref);
 }
 
-REF X,Y,Z;
+struct STR: WAM {			// [hak,p.10] term representation
+	STR();
+	static string tag,term;
+	int tptr;				// term pointer
+};
+string STR::tag = "STR";
+string STR::term = "TERM";
+STR::STR():WAM() { HEAP[hptr].tag = &tag; tptr = CELL::allocate(term);
+	HEAP[hptr].ref=tptr; HEAP[tptr].ref=tptr;
+	}
+
+REF X,Y;
+STR A,B;
 
 int main() {
 	dump_heap();

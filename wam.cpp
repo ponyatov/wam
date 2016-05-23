@@ -5,15 +5,16 @@
 #include "wam.hpp"
 #define YYERR "\n\n"<<yylineno<<":"<<msg<<"["<<yytext<<"]\n\n"
 void yyerror(string msg) { cout<<YYERR; cerr<<YYERR; exit(-1); }
-int main() { yyparse(); cout << "=============\n"; heap_dump(); return 0; }
+int main() { yyparse(); heap_dump(); return 0; }
 
 // ============== HEAP ============
 
 vector<Cell*> HEAP;
 
 void heap_dump() {
+	cout << "================= HEAP =================\n";
 	for (auto item = HEAP.begin(), last = HEAP.end(); item != last; item++)
-		cout << (*item)->dump() << endl;
+		cout << (*item)->head();// << endl;
 }
 
 // ========== WAM heap cell =======
@@ -25,10 +26,15 @@ Cell::Cell(string T) {
 		assert(HEAP.size() < HEAPsz);	// limit total HEAP size
 }
 
+string Cell::pad(string X) {
+	string S = X;
+	for (int i = 0; i < 0x10 - X.length(); i++) S += ' ';
+	return S;
+}
 string Cell::head() {					// represent as string
-		ostringstream os;
-		os << this << ":\t" << tag << '\t' << ref << endl;
-		return os.str();
+	ostringstream os;
+	os << this << ":\t" << pad(tag) << '\t' << ref << endl;
+	return os.str();
 }
 string Cell::dump() { return head(); }
 

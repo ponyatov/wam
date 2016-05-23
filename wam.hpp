@@ -18,6 +18,7 @@ struct Cell {				// [hak,p.10] heap cell
 	Cell(string);
 	virtual string dump();	// represent as string
 	string head();
+	string pad(string);
 	int arity=0;
 	vector <Cell*> nest;
 	void push(Cell*);

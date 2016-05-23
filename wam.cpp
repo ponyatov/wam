@@ -2,101 +2,64 @@
 // based on [hak] Hassan Aït-Kaci
 // Warren's Abstract Machine: A Tutorial Reconstruction
 
-// ============ headers ===========
-
-#include <iostream>
-#include <sstream>
-#include <cstdio>
-#include <cassert>
-#include <vector>
-#include <map>
-using namespace std;
+#include "wam.hpp"
+#define YYERR "\n\n"<<yylineno<<":"<<msg<<"["<<yytext<<"]\n\n"
+void yyerror(string msg) { cout<<YYERR; cerr<<YYERR; exit(-1); }
+int main() { yyparse(); cout << "=============\n"; heap_dump(); return 0; }
 
 // ============== HEAP ============
 
-struct CELL;				// \ HEAP uses C++ vector storage in system memory
-vector<CELL*> HEAP;			// /
+vector<Cell*> HEAP;
+
+void heap_dump() {
+	for (auto item = HEAP.begin(), last = HEAP.end(); item != last; item++)
+		cout << (*item)->dump() << endl;
+}
 
 // ========== WAM heap cell =======
 
-struct CELL {				// [hak,p.10] heap cell
-							// (base class must have 1+ virtual fn)
-
-	string tag;				// cell type tag
-	CELL* ref;				// pointer to other cell (or itself) see [hak,L0]
-
-	CELL() {
+Cell::Cell(string T) {
+		tag = T;						// tag
 		ref = this;						// point to itself
-		tag = "(cell)";					// static tag not works (?)
 		HEAP.push_back(this);			// save to HEAP
 		assert(HEAP.size() < HEAPsz);	// limit total HEAP size
-	}
+}
 
-	virtual string dump() {				// represent as string
+string Cell::head() {					// represent as string
 		ostringstream os;
 		os << this << ":\t" << tag << '\t' << ref << endl;
 		return os.str();
-	}
-};
+}
+string Cell::dump() { return head(); }
+
+void Cell::push(Cell*X) {
+	nest.push_back(X);
+	arity++;
+}
 
 // ============== REF =============
 
-struct REF: CELL {				// [hak,p.10] <REF,k> k = system heap addr
-	REF() : CELL() {
-		tag = "REF";
-	}
-};
+Ref::Ref(string V): Cell("REF:"+V) {}// [hak,p.10] <REF,k> k = system heap addr
 
 // ============== STR ==============
 
-struct STR: CELL {				// [hak,p.10] pointer to [str]ucture
-	STR(CELL *T) : CELL() {
-		tag = "STR";
-		ref = T;
-	}
-};
+Str::Str(Cell*X) : Cell("STR") { ref=X; }
+
+string Str::dump() { return head()+ref->dump(); }
 
 // ============== term/n ===========
 
-struct TERM : CELL {
+Term::Term(string V):Cell(V) {}
 
-	TERM(string Name) : CELL() {
-		tag = Name;
-	}
-
-	int arity=0;
-	vector<CELL*> nest;			// nested terms
-	void push(CELL*X) {
-		nest.push_back(X);
-		arity++;
-	}
-
-	string dump() {
+string Term::dump() {
 		ostringstream os;
 		os << this << ":\t" << tag << "/" << arity << endl;
 		for (auto it = nest.begin(), e = nest.end(); it != e; it++)
 			os << (*it)->dump();
 		return os.str();
-	}
-};
-
-// ================== heap dump ==============
-
-void dump_heap() {
-	for (auto item = HEAP.begin(), last = HEAP.end(); item != last; item++)
-		cout << (*item)->dump() << endl;
 }
 
-// ============== static defined items ===========
+// ================== LIST ==============
 
-REF X,Y;
-TERM B("bb");
-STR C(&B);
-
-// ===================== main() ============
-
-int main() {
-	B.push(new REF()); B.push(new TERM("oCo"));
-	dump_heap();
-	return 0;
-}
+List::List(){}
+void List::push(Cell*o) { nest.push_back(o); }

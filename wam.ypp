@@ -1,0 +1,21 @@
+%{
+#include "wam.hpp"
+%}
+%defines %union { Cell *o; char c; List *l; }
+%token <o> REF TERM
+%token <c> LP RP COMMA DOT AND	/* () , . & */
+%type <o> ex
+%type <l> cmms
+%%
+REPL : | REPL ex { cout << $2->dump() << endl; } ;
+ex : REF
+	| TERM LP cmms RP	{ $$=$1;
+	for (auto it=$3->nest.begin(),e=$3->nest.end();it!=e;it++) $$->push(*it); }
+	| TERM 				{ $$=$1; }
+	| AND ex			{ $$=new Str($2); }
+;
+cmms :				{ $$=new List(); }
+	| cmms ex		{ $$=$1; $$->push($2); }
+	| cmms COMMA ex	{ $$=$1; $$->push($3); }
+;
+%%

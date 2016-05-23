@@ -1,0 +1,19 @@
+%{
+#include "wam.hpp"
+%}
+%option noyywrap
+%option yylineno
+%%
+\%[^\n]*	{}
+
+[A-Z]+		TOC(Ref,REF)
+[a-z]+		TOC(Term,TERM)
+
+\(			{ yylval.c = yytext[0]; return LP; }
+\)			{ yylval.c = yytext[0]; return RP; }
+\,			{ yylval.c = yytext[0]; return COMMA; }
+\.			{ yylval.c = yytext[0]; return DOT; }
+\&			{ yylval.c = yytext[0]; return AND; }
+
+[ \t\r\n]+	{}
+%%

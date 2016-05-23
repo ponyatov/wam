@@ -32,7 +32,7 @@ struct CELL {				// [hak,p.10] heap cell
 		assert(HEAP.size() < HEAPsz);	// limit total HEAP size
 	}
 
-	virtual string dump() {	// represent as string
+	virtual string dump() {				// represent as string
 		ostringstream os;
 		os << this << ":\t" << tag << '\t' << ref << endl;
 		return os.str();
@@ -41,48 +41,44 @@ struct CELL {				// [hak,p.10] heap cell
 
 // ============== REF =============
 
-struct REF: CELL {			// [hak,p.10] <REF,k> k = system heap addr
-	REF();
+struct REF: CELL {				// [hak,p.10] <REF,k> k = system heap addr
+	REF() : CELL() {
+		tag = "REF";
+	}
 };
-
-REF::REF() : CELL() {
-	tag = "REF";
-}
 
 // ============== STR ==============
 
-struct STR: CELL {			// [hak,p.10]
-	STR(CELL*);
+struct STR: CELL {				// [hak,p.10] pointer to [str]ucture
+	STR(CELL *T) : CELL() {
+		tag = "STR";
+		ref = T;
+	}
 };
-
-STR::STR(CELL*FNC) : CELL() {
-	tag = "STR"; ref = FNC;
-}
 
 // ============== term/n ===========
 
 struct TERM : CELL {
-	CELL* str;
-	TERM(string);
+
+	TERM(string Name) : CELL() {
+		tag = Name;
+	}
+
 	int arity=0;
-	vector<CELL*> nest; void push(CELL*);	// nested terms
-	string dump();
+	vector<CELL*> nest;			// nested terms
+	void push(CELL*X) {
+		nest.push_back(X);
+		arity++;
+	}
+
+	string dump() {
+		ostringstream os;
+		os << this << ":\t" << tag << "/" << arity << endl;
+		for (auto it = nest.begin(), e = nest.end(); it != e; it++)
+			os << (*it)->dump();
+		return os.str();
+	}
 };
-
-TERM::TERM(string Name) : CELL() {
-	str = new STR(this);
-	tag = Name;
-}
-
-void TERM::push(CELL* X) { nest.push_back(X); arity++; }
-
-string TERM::dump() {
-	ostringstream os;
-	os << this << ":\t" << tag << "/" << arity << endl;
-	for (auto it = nest.begin(), e = nest.end(); it != e; it++)
-		os << (*it)->dump();
-	return os.str();
-}
 
 // ================== heap dump ==============
 
@@ -94,12 +90,13 @@ void dump_heap() {
 // ============== static defined items ===========
 
 REF X,Y;
-TERM B("bb"),C("cCc");
+TERM B("bb");
+STR C(&B);
 
 // ===================== main() ============
 
 int main() {
-	B.push(new REF()); B.push(new STR(&C));
+	B.push(new REF()); B.push(new TERM("oCo"));
 	dump_heap();
 	return 0;
 }

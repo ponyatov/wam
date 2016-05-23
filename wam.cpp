@@ -20,24 +20,24 @@ vector<CELL*> HEAP;			// /
 // ========== WAM heap cell =======
 
 struct CELL {				// [hak,p.10] heap cell
-	CELL();
+							// (base class must have 1+ virtual fn)
+
 	string tag;				// cell type tag
 	CELL* ref;				// pointer to other cell (or itself) see [hak,L0]
-	virtual string dump();	// represent as string (must have 1+ virtual fn)
+
+	CELL() {
+		ref = this;						// point to itself
+		tag = "(cell)";					// static tag not works (?)
+		HEAP.push_back(this);			// save to HEAP
+		assert(HEAP.size() < HEAPsz);	// limit total HEAP size
+	}
+
+	virtual string dump() {	// represent as string
+		ostringstream os;
+		os << this << ":\t" << tag << '\t' << ref << endl;
+		return os.str();
+	}
 };
-
-CELL::CELL() {
-	ref = this;						// point to itself
-	tag = "(cell)";					// static tag not works (?)
-	HEAP.push_back(this);			// save to HEAP
-	assert(HEAP.size() < HEAPsz);	// limit total HEAP size
-}
-
-string CELL::dump() {		// dump cell as string
-	ostringstream os;
-	os << this << ":\t" << tag << '\t' << ref << endl;
-	return os.str();
-}
 
 // ============== REF =============
 

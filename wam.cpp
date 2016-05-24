@@ -58,11 +58,16 @@ string Str::dump() { return head()+ref->dump(); }
 Term::Term(string V):Cell(V) {}
 
 string Term::dump() {
-		ostringstream os;
-		os << this << ":\t" << tag << "/" << arity << endl;
+		string S = head();
 		for (auto it = nest.begin(), e = nest.end(); it != e; it++)
-			os << (*it)->dump();
-		return os.str();
+			S += (*it)->dump();
+		return S;
+}
+
+string Term::head() {					// special for term/x
+	ostringstream os;
+	os << this << ":\t" << tag << '/' << arity << endl;
+	return os.str();
 }
 
 // ================== LIST ==============

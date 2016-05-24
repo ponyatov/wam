@@ -17,7 +17,7 @@ struct Cell {				// [hak,p.10] heap cell
 	Cell* ref;				// pointer to other cell (or itself) see [hak,L0]
 	Cell(string);
 	virtual string dump();	// represent as string
-	string head();
+	virtual string head();
 	string pad(string);
 	int arity=0;
 	vector <Cell*> nest;
@@ -39,6 +39,7 @@ struct Str: Cell {			// [hak,p.10] pointer to [str]ucture
 struct Term : Cell {
 	Term(string);
 	string dump();
+	string head();
 };
 
 struct List {

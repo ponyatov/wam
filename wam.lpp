@@ -4,10 +4,10 @@
 %option noyywrap
 %option yylineno
 %%
-\%[^\n]*	{}
+\%[^\n]*	{}						/* line comment */
 
-[A-Z]+		TOC(Ref,REF)
-[a-z]+		TOC(Term,TERM)
+[A-Z][a-zA-Z0-9_]*	TOC(Ref,REF)	/* first upcase is variables */
+[a-z][a-zA-Z0-9_]*	TOC(Term,TERM)	/* first lowercase is term names */
 
 \(			{ yylval.c = yytext[0]; return LP; }
 \)			{ yylval.c = yytext[0]; return RP; }
@@ -15,5 +15,5 @@
 \.			{ yylval.c = yytext[0]; return DOT; }
 \&			{ yylval.c = yytext[0]; return AND; }
 
-[ \t\r\n]+	{}
+[ \t\r\n]+	{}						/* drop spaces */
 %%

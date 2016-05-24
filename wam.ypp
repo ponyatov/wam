@@ -15,7 +15,7 @@ ex : REF
 	| AND ex			{ $$=new Str($2); }
 ;
 list :				{ $$=new List(); }
-	| ex			{ $$=new List(); $$->push($1); }
+	| list ex		{ $$=$1; $$->push($2); }
 	| list COMMA ex	{ $$=$1; $$->push($3); }
 ;
 %%

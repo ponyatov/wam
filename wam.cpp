@@ -5,7 +5,7 @@
 #include "wam.hpp"
 #define YYERR "\n\n"<<yylineno<<":"<<msg<<"["<<yytext<<"]\n\n"
 void yyerror(string msg) { cout<<YYERR; cerr<<YYERR; exit(-1); }
-int main() { yyparse(); heap_dump(); return 0; }
+int main() { yyparse(); heap_dump(); X_dump(); return 0; }
 
 // ============== HEAP ============
 
@@ -14,10 +14,43 @@ vector<Cell*> HEAP;
 void heap_dump() {
 	cout << "================= HEAP =================\n";
 	for (auto item = HEAP.begin(), last = HEAP.end(); item != last; item++)
-		cout << (*item)->head();// << endl;
+		cout << (*item)->head() << endl;
 }
 
 map<string,Cell*> heap_index;
+
+// ========== X registers =========
+
+Cell* X[Xsz];
+
+void X_dump() {
+	cout << "================= X regs =================\n";
+	for (auto i=0;i<Xsz;i++) {
+		cout << i << '\t';
+		if (X[i]) cout << X[i]->head();
+		cout << endl;
+	}
+}
+
+Xref::Xref(int X) : Cell("X","") { Xn=X; }
+string Xref::head() {
+	ostringstream os;
+	os << this << ":\t" << tag << ":" << Xn << endl;
+	return os.str();
+}
+
+Xvar::Xvar(string V) : Cell("X",V) {}
+Xvar::Xvar(int N) : Cell("X","") {
+	Xn=N; ostringstream os; os<<N; name=os.str();
+}
+string Xvar::dump(int depth) {
+	string S = Cell::dump(depth);
+	for (auto it=nest.begin(),e=nest.end();it!=e;it++)
+		S += '\t'+(*it)->dump(depth+1);
+	return S;
+}
+
+void Xvar::push(Cell*o) { Cell::push(o); X[Xn]=o; }
 
 // ========== WAM heap cell =======
 
@@ -39,10 +72,16 @@ string Cell::pad(string X) {
 }
 string Cell::head() {					// represent as string
 	ostringstream os;
-	os << this << ":\t" << pad(tag+":"+name) << '\t' << ref << endl;
+	os << this << ":\t" << pad(tag+":"+name) << '\t' << ref;
 	return os.str();
 }
-string Cell::dump() { return head(); }
+string Cell::dump(int depth) {
+	string S = "\n" + tab(depth) + head();
+	for (auto it = nest.begin(), e = nest.end(); it != e; it++)
+		S += (*it)->dump(depth+1);
+	return S;
+}
+string Cell::tab(int n) { string S; for (int i=0;i<n;i++) S+='\t'; return S; }
 
 void Cell::push(Cell*X) { nest.push_back(X); }
 
@@ -52,6 +91,7 @@ Ref::Ref(string V) : Cell("REF",V) {// [hak,p.10] <REF,k> k = system heap addr
 	to_heap();
 	if (heap_index[name]) {			// heap index lookup
 		ref = heap_index[name];
+		push(ref);
 		name = "";					// zero name: points to other named REF
 	}
 	else heap_index[name] = this;	// save to index
@@ -61,22 +101,15 @@ Ref::Ref(string V) : Cell("REF",V) {// [hak,p.10] <REF,k> k = system heap addr
 
 Str::Str(Cell*X) : Cell("STR","") { ref = X; to_heap(); }
 
-string Str::dump() { return head()+ref->dump(); }
+string Str::dump(int depth) { return Cell::dump(depth)+ref->dump(depth+1); }
 
 // ============== term/n ===========
 
 Term::Term(string V) : Cell("TERM",V) { to_heap(); }
 
-string Term::dump() {
-		string S = head();
-		for (auto it = nest.begin(), e = nest.end(); it != e; it++)
-			S += (*it)->dump();
-		return S;
-}
-
 string Term::head() {					// special for term/x
 	ostringstream os;
-	os << this << ":\t" << name << '/' << nest.size() << endl;
+	os << this << ":\t" << name << '/' << nest.size();
 	return os.str();
 }
 

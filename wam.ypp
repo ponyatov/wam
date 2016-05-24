@@ -1,9 +1,10 @@
 %{
 #include "wam.hpp"
 %}
-%defines %union { Cell *o; char c; List *l; }
-%token <o> REF TERM
-%token <c> LP RP COMMA DOT AND	/* () , . & */
+%defines %union { Cell *o; char c; List *l; int n; }
+%token <o> REF TERM XVAR
+%token <n> NUM
+%token <c> LP RP COMMA DOT AND EQ	/* () , . & = */
 %type <o> ex
 %type <l> list
 %%
@@ -13,6 +14,8 @@ ex : REF
 	for (auto it=$3->nest.begin(),e=$3->nest.end();it!=e;it++) $$->push(*it); }
 	| TERM 				{ $$=$1; }
 	| AND ex			{ $$=new Str($2); }
+	| XVAR NUM EQ ex	{ $$=new Xvar($2); $$->push($4); }
+	| XVAR NUM			{ $$=new Xvar($2); }
 ;
 list :				{ $$=new List(); }
 	| list ex		{ $$=$1; $$->push($2); }

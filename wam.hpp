@@ -19,16 +19,32 @@ struct Cell {				// [hak,p.10] heap cell
 	Cell* ref;				// pointer to other cell (or itself) see [hak,L0]
 	Cell(string,string);
 	virtual void to_heap();	// HEAP allocator
-	virtual string dump();	// represent as string
+	virtual string dump(int=0);	// represent as string
 	virtual string head();
-	string pad(string);
+	string pad(string); string tab(int);
 	vector <Cell*> nest;
-	void push(Cell*);
+	virtual void push(Cell*);
 };
 
 extern vector<Cell*> HEAP;	// uses C++ vector storage in system memory
 extern void heap_dump();
 extern map<string,Cell*> heap_index;	// index table for term & vars
+
+extern Cell* X[Xsz];		// X-registers vector [hak,p.11]
+extern void X_dump();		// dump X array
+
+struct Xref : Cell {		// reference to X register
+	int Xn;					// index in X array;
+	Xref(int);
+	string head();
+};
+struct Xvar: Cell {
+	int Xn;
+	Xvar(string);
+	Xvar(int);
+	string dump(int);
+	void push(Cell*);
+};
 
 struct Ref: Cell {			// [hak,p.10] <REF,k> k = system heap addr
 	Ref(string);
@@ -36,12 +52,12 @@ struct Ref: Cell {			// [hak,p.10] <REF,k> k = system heap addr
 
 struct Str: Cell {			// [hak,p.10] pointer to [str]ucture
 	Str(Cell*);
-	string dump();
+	string dump(int);
 };
 
 struct Term : Cell {
 	Term(string);
-	string dump();
+//	string dump(int);
 	string head();
 };
 

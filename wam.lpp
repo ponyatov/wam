@@ -6,6 +6,8 @@
 %%
 \%[^\n]*	{}						/* line comment */
 
+[0-9]+				{ yylval.n = atoi(yytext); return NUM; }
+_X					TOC(Xvar,XVAR)
 [A-Z][a-zA-Z0-9_]*	TOC(Ref,REF)	/* first upcase is variables */
 [a-z][a-zA-Z0-9_]*	TOC(Term,TERM)	/* first lowercase is term names */
 
@@ -14,6 +16,7 @@
 \,			{ yylval.c = yytext[0]; return COMMA; }
 \.			{ yylval.c = yytext[0]; return DOT; }
 \&			{ yylval.c = yytext[0]; return AND; }
+\=			{ yylval.c = yytext[0]; return EQ; }
 
 [ \t\r\n]+	{}						/* drop spaces */
 %%

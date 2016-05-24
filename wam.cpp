@@ -17,13 +17,19 @@ void heap_dump() {
 		cout << (*item)->head();// << endl;
 }
 
+map<string,Cell*> heap_index;
+
 // ========== WAM heap cell =======
 
-Cell::Cell(string T) {
-		tag = T;						// tag
-		ref = this;						// point to itself
-		HEAP.push_back(this);			// save to HEAP
-		assert(HEAP.size() < HEAPsz);	// limit total HEAP size
+Cell::Cell(string T, string N) {
+	tag = T;
+	name = N;
+	ref = this;						// point to itself
+}
+
+void Cell::to_heap() {
+	HEAP.push_back(this);			// save to HEAP
+	assert(HEAP.size() < HEAPsz);	// limit total HEAP size
 }
 
 string Cell::pad(string X) {
@@ -33,29 +39,33 @@ string Cell::pad(string X) {
 }
 string Cell::head() {					// represent as string
 	ostringstream os;
-	os << this << ":\t" << pad(tag) << '\t' << ref << endl;
+	os << this << ":\t" << pad(tag+":"+name) << '\t' << ref << endl;
 	return os.str();
 }
 string Cell::dump() { return head(); }
 
-void Cell::push(Cell*X) {
-	nest.push_back(X);
-	arity++;
-}
+void Cell::push(Cell*X) { nest.push_back(X); }
 
 // ============== REF =============
 
-Ref::Ref(string V): Cell("REF:"+V) {}// [hak,p.10] <REF,k> k = system heap addr
+Ref::Ref(string V) : Cell("REF",V) {// [hak,p.10] <REF,k> k = system heap addr
+	to_heap();
+	if (heap_index[name]) {			// heap index lookup
+		ref = heap_index[name];
+		name = "";					// zero name: points to other named REF
+	}
+	else heap_index[name] = this;	// save to index
+}
 
 // ============== STR ==============
 
-Str::Str(Cell*X) : Cell("STR") { ref=X; }
+Str::Str(Cell*X) : Cell("STR","") { ref = X; to_heap(); }
 
 string Str::dump() { return head()+ref->dump(); }
 
 // ============== term/n ===========
 
-Term::Term(string V):Cell(V) {}
+Term::Term(string V) : Cell("TERM",V) { to_heap(); }
 
 string Term::dump() {
 		string S = head();
@@ -66,11 +76,10 @@ string Term::dump() {
 
 string Term::head() {					// special for term/x
 	ostringstream os;
-	os << this << ":\t" << tag << '/' << arity << endl;
+	os << this << ":\t" << name << '/' << nest.size() << endl;
 	return os.str();
 }
 
 // ================== LIST ==============
 
-List::List(){}
-void List::push(Cell*o) { nest.push_back(o); }
+List::List() : Cell("","[]") { /* no to_heap() */}

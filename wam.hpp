@@ -11,18 +11,24 @@
 #include <map>
 using namespace std;
 
+
 struct Cell {				// [hak,p.10] heap cell
 							// (base class must have 1+ virtual fn)
 	string tag;				// cell type tag
+	string name;			// item name (used for heap lookups)
 	Cell* ref;				// pointer to other cell (or itself) see [hak,L0]
-	Cell(string);
+	Cell(string,string);
+	virtual void to_heap();	// HEAP allocator
 	virtual string dump();	// represent as string
 	virtual string head();
 	string pad(string);
-	int arity=0;
 	vector <Cell*> nest;
 	void push(Cell*);
 };
+
+extern vector<Cell*> HEAP;				// HEAP
+extern void heap_dump();
+extern map<string,Cell*> heap_index;	// index table for term & vars
 
 extern vector<Cell*> HEAP;	// uses C++ vector storage in system memory
 extern void heap_dump();
@@ -42,9 +48,9 @@ struct Term : Cell {
 	string head();
 };
 
-struct List {
+struct List : Cell {
 	List();
-	vector<Cell*> nest; void push(Cell*);
+	void to_heap(){}		// drop HEAP allocation
 };
 
 extern int yylex();

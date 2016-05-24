@@ -42,7 +42,6 @@ struct Xvar: Cell {
 	int Xn;
 	Xvar(string);
 	Xvar(int);
-	string dump(int);
 	void push(Cell*);
 };
 

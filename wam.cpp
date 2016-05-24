@@ -43,14 +43,8 @@ Xvar::Xvar(string V) : Cell("X",V) {}
 Xvar::Xvar(int N) : Cell("X","") {
 	Xn=N; ostringstream os; os<<N; name=os.str();
 }
-string Xvar::dump(int depth) {
-	string S = Cell::dump(depth);
-	for (auto it=nest.begin(),e=nest.end();it!=e;it++)
-		S += '\t'+(*it)->dump(depth+1);
-	return S;
-}
 
-void Xvar::push(Cell*o) { Cell::push(o); X[Xn]=o; }
+void Xvar::push(Cell*o) { X[Xn]=o; Cell::push(o); }
 
 // ========== WAM heap cell =======
 

@@ -6,8 +6,9 @@
 %%
 \%[^\n]*	{}						/* line comment */
 
-[0-9]+				{ yylval.n = atoi(yytext); return NUM; }
 _X					TOC(Xvar,XVAR)
+[0-9]+				{ yylval.n = atoi(yytext); return NUM; }
+
 [A-Z][a-zA-Z0-9_]*	TOC(Ref,REF)	/* first upcase is variables */
 [a-z][a-zA-Z0-9_]*	TOC(Term,TERM)	/* first lowercase is term names */
 

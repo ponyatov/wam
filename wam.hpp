@@ -26,12 +26,9 @@ struct Cell {				// [hak,p.10] heap cell
 	void push(Cell*);
 };
 
-extern vector<Cell*> HEAP;				// HEAP
-extern void heap_dump();
-extern map<string,Cell*> heap_index;	// index table for term & vars
-
 extern vector<Cell*> HEAP;	// uses C++ vector storage in system memory
 extern void heap_dump();
+extern map<string,Cell*> heap_index;	// index table for term & vars
 
 struct Ref: Cell {			// [hak,p.10] <REF,k> k = system heap addr
 	Ref(string);

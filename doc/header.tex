@@ -10,6 +10,9 @@
 \usepackage{titlesec}
 \titleformat{\chapter}{\Large\bfseries}{\thechapter.}{1em}{}
 \titleformat{\section}{\large\bfseries}{\thesection.}{1em}{}
+%% fix blank page at start
+\usepackage{atbegshi}% http://ctan.org/pkg/atbegshi
+\AtBeginDocument{\AtBeginShipoutNext{\AtBeginShipoutDiscard}}
 %% drop contents headers
 \makeatletter
 \renewcommand\tableofcontents{%
@@ -43,7 +46,16 @@
 
 % misc
 \newcommand{\email}[1]{$<$\href{mailto:#1}{#1}$>$}
-\renewcommand{\emph}[1]{\textcolor{red}{#1}}
+\renewcommand{\emph}[1]{\textcolor{blue}{#1}}
 \newcommand{\term}[1]{\textcolor{green}{#1}}
 \newcommand{\termdef}[2]{\textcolor{green}{#1}\index{#2}}
 \newcommand{\note}[1]{\,\footnote{\ #1}}
+
+% computer
+\usepackage{verbatim}
+%% languages
+\newcommand{\lisp}{$Lisp$}
+\newcommand{\prolog}{$Prolog$}
+\newcommand{\py}{$Python$}
+\newcommand{\csharp}{$C\#$}
+\newcommand{\js}{$JS$}

@@ -1,6 +1,74 @@
+\clearpage
 \secly{Foreword to the reprinted edition}
+
+This document is a reprinted edition of the book bearing the same title that was
+published by MIT Press, in 1991 under ISBN 0-262-51058-8 (paper) and ISBN
+0-262-01123-9 (cloth). The MIT Press edition is now out of print, and its
+copyright has been transferred to the author. This version is available for free
+to anyone who wants to use it for non-commercial purposes, from the author’s web
+site at:
+
+\medskip
+\url{http://www.isg.sfu.ca/˜hak/documents/wam.html}
+\medskip
+
+\noindent
+If you retrieve it, please let me know who you are, and for what purpose you
+intend to use it.
+Thank you very much.
+\begin{flushright}
+$H-A-K$\\
+Burnaby, BC, Canada\\
+May 1997
+\end{flushright}
 
 \secly{Foreword}
 
 \secly{Acknowledgments}
 
+\clearpage
+\secly{Примечания переводчика}
+
+Я давно интересуюсь применением алгоритмов AI\note{\emph{A}rtificial
+\emph{I}ntelligence, приложения искуственного интеллекта} и
+KRR\note{\emph{K}nowledge \emph{R}epresentation \& \emph{R}easoning, базы знаний
+и экспертные системы} для разработки экспертных систем, баз знаний,
+автоматизации синтеза аппаратно-програм\-мных систем\cite{bibilo},
+трансформационного\note{\emph{T}ransformation \emph{P}rogramming} и
+мета-программирования. В большинстве литературы по этой теме рекомендуется
+использовать язык \prolog\ (или диалекты \lisp\ --- CLOS, CLIPS,
+Sheme,\ldots).
+
+К сожалению у языка \prolog\ совершенно непривычная методология программирования
+и архитектура абстрактной машины, особенно для разработчиков, уже имеющих
+некоторый опыт программирования на других в основном императивных языках:
+\emph{чтобы писать на \prolog, нужно вывихнуть мозг}. Без понимания внутреннего
+устройства языка это сделать крайне сложно.
+С другой стороны, для практического применения необходимо не только понимать
+работу \prolog-системы, но и при необходимости иметь возможность реализовать ее
+самостоятельно, встроив в некоторый большой программный продукт, или запустить в
+виде клиентского приложения в веб-браузере.
+
+Поскольку мне более интересна фреймовая модель\cite{minsky} и использование
+объектно-графовых баз данных как средства хранения, поиска и логического вывода,
+возникает проблема реализации специализированной машины вывода по графу
+представления знаний. В поисках книг по реализации таких систем удалось
+найти эту книгу по устройству языка \prolog, и Yield
+Prolog\note{\url{http://yieldprolog.sourceforge.net}}\ для языков,
+поддерживающих генераторные функции: \py, \js\ и \csharp.
+
+Поскольку книг по реализации языков программирования (особенно динамических
+языков) на русском языке почти нет\cite{dragon,plai}, мне показалось полезным
+сделать ``пиратский'' перевод для более глубокого понимания книги, и наработки
+скиллов по чтению на английском. Если эта тема будет интересна, возможно стоит
+подумать об официальном переводе и публикации на русском языке, или подготовки
+отдельного адаптированного издания ``по мотивам'' (в зависимости от настроений
+правообладателей:\\\copyright\ MIT Press, Hassan A\"it-Kaci).
+
+\bigskip
+\begin{description}
+\item[github:] \url{https://github.com/ponyatov/wam}
+\item[quora:] \url{http://ponyatov.quora.com/}
+\item[email:] \email{dponyatov@gmail.com}
+\end{description}
+ 

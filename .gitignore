@@ -1,6 +1,3 @@
 *~
 *.swp
-*.exe
-*.log
-*.tab.?pp
-lex.yy.c
+

@@ -10,6 +10,12 @@
 \usepackage{titlesec}
 \titleformat{\chapter}{\Large\bfseries}{\thechapter.}{1em}{}
 \titleformat{\section}{\large\bfseries}{\thesection.}{1em}{}
+%% drop contents headers
+\makeatletter
+\renewcommand\tableofcontents{%
+    \@starttoc{toc}%
+}
+\makeatother
 
 % Cyrillization
 %% \usepackage[T1,T2A]{fontenc}

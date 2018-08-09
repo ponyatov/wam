@@ -1,3 +1,7 @@
+
+doc/wambook.pdf:
+	wget -c -P doc http://wambook.sourceforge.net/wambook.pdf
+
 wam.log: ./wam.exe wam.src
 	./wam.exe < wam.src > $@ && tail $(TAIL) $@
 C = wam.cpp wam.tab.cpp lex.yy.c

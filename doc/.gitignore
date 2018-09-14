@@ -1,5 +1,7 @@
-wam.aux
-wam.log
-wam.out
-wam.pdf
-wam.toc
+*.aux
+*.log
+*.out
+*.pdf
+*.toc
+*.dvi
+

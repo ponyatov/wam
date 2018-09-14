@@ -1,4 +1,4 @@
-TEX  = wam.tex header.tex title.tex bib.tex
+TEX  = wam_ru.tex header.tex title.tex bib.tex
 TEX += intro.tex foreword.tex 
 TEX += literature.tex tutorial.tex disclaimer.tex organization.tex
 TEX += unification.tex termrepr.tex cmplqueries.tex cmplprograms.tex argregs.tex

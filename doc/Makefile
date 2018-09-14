@@ -13,5 +13,5 @@ TEX += ataglance.tex WAMins.tex WAMancops.tex WAMmemory.tex
 
 LATEX = pdflatex -halt-on-error
 
-wam.pdf: $(TEX)
+wam_ru.pdf: $(TEX)
 	$(LATEX) $< && $(LATEX) $<

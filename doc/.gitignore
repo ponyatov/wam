@@ -1,7 +1,3 @@
-*.aux
-*.log
-*.out
-*.pdf
-*.toc
-*.dvi
-
+wambook.pdf
+*.html
+*.css

@@ -1,0 +1,67 @@
+\secrel{Существующая литература}\secdown
+
+Свидетельством этого недостатка понимания является тот факт, что за шесть лет
+опубликовано мало публикаций, которые хотя бы бы обучали WAM, и уж тем более
+формально доказывали ее правильность. Действительно, помимо оригинального
+герметического отчета Варрена \cite{War83}, по WAM практически не было
+официальных публикаций. Несколько лет назад можно было найти черновик,
+составленный группой в Арагонской Национальной Лаборатории \cite{GLLO85}. Но
+честно говоря мы обнаружили что эту рукопись еще сложнее понять чем сам отчет
+Варрена. Надостаток заключался в том что черновик настаивал на представлении
+полной WAM как есть, вместо постепенно трансформированного и оптимизированного
+дизайна.
+
+\clearpage
+Немного улучшенный стиль был фактически использован David Maier и David S.
+Warren\note{Это другой человек, а не разработчик WAM, для которого исследование
+WAM было очень вдохновляющим. В свою очередь, достаточно интересно, что David H.
+D. Warren в последнее время работал над параллельной архитектурой для \prolog а,
+чья абстрактная модель разделяет некоторые идеи, независимо задуманные David S.
+Warren}\ в \cite{MW88}. Там можно найти описание методов компиляции \prolog,
+подобных WAM.\note{Op. Cit., Глава 11.}
+Тем не менее, мы считаем, что это в любом случае весьма похвальное усилие
+по-прежнему страдает от нескольких недостатков в качестве окончательного
+учебника. Во-первых, он описывает близкий вариант WAM, а не, строго говоря, сам
+WAM. То есть описаны не все функции WAM.
+Более того, объяснения ограничиваются иллюстративными примерами и редко делают
+явным и исчерпывающим образом конкретный контекст, в котором применяются
+некоторые оптимизации.
+
+Second, the part
+devoted to compilation of Prolog comes very late in the book—in the penultimate
+chapter—relying, for implementation details, on overly detailed Pascal procedures
+and data structures incrementally refined over the previous chapters. We
+feel that this sidetracks reading and obfuscates to-the-point learning of the abstract
+machine. Finally, although it presents a series of gradually refined designs,
+their tutorial does not separate orthogonal pieces of Prolog in the process. All the
+versions presented are full Prolog machines. As a result, the reader interested in
+picking and choosing partial techniques to adapt somewhere else cannot discriminate
+among these easily. Now, in all fairness, Maier and Warren’s book has the
+different ambition of being a first course in logic programming. Thus, it is actually
+a feat that its authors were able to cover so much material, both theoretical
+and practical, and go so far as to include also Prolog compiling techniques. More
+important, their book is the first available official publication to contain a (real)
+tutorial on the WAM techniques.
+
+After the preliminary version of this book had been completed, another recent
+publication containing a tutorial on the WAM was brought to this author’s attention.
+It is a book due to Patrice Boizumault \cite{Boi88}\ whose Chapter 9 is devoted
+to explaining the WAM. There again, its author does not use a gradual presentation
+of partial Prolog machines. Besides, it is written in French—a somewhat restrictive
+trait as far as its readership is concerned. Still, Boizumault’s book is very well
+conceived, and contains a detailed discussion describing an explicit implementation
+technique for the \emph{freeze} meta-predicate.\note{Op. Cit., Chapter 10.}
+
+Even more recently, a formal verification of the correctness of a slight simplification
+of the WAM was carried out by David Russinoff \cite{Rus89}. That work deserves
+justified praise as it methodically certifies correctness of most of the WAM with
+respect to Prolog’s SLD resolution semantics. However, it is definitely not a tutorial,
+although Russinoff defines most of the notions he uses in order to keep his
+work self-contained. In spite of this effort, understanding the details is considerably
+impeded without working familiarity with the WAM as a prerequisite. At
+any rate, Russinoff’s contribution is nevertheless a premi`ere as he is the first to
+establish rigorously something that had been taken for granted thus far. Needless
+to say, that report is not for the fainthearted.
+
+
+\secup

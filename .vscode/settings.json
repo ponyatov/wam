@@ -27,12 +27,14 @@
         // "**/docs/**":true,
         // "**/buildroot-*/**": true,
         // "**/firmware/**": true,
+        "wam":true,
     },
 
     "files.exclude": {
         // "bin": true, "include":true, "lib*":true, "share":true,
         // "pyvenv.cfg":true, "**/*.pyc": true,
         // "**/docs/**":true,
+        "wam":true,
     },
 
     "editor.tabSize": 4,

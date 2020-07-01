@@ -15,10 +15,3 @@ LATEX = pdflatex -halt-on-error
 
 wam_ru.pdf: $(TEX)
 	$(LATEX) $< && $(LATEX) $<
-
-release: WAM_ru_$(NOW).pdf
-	git tag $(NOW)
-WAM_ru_$(NOW).pdf: doc/wam_ru.pdf
-	cp $< $@
-doc/wam_ru.pdf:
-	cd doc ; $(MAKE)
